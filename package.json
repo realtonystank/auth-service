@@ -12,5 +12,9 @@
     "node"
   ],
   "author": "Priyansh Singh Rajwar <rajwars.priyansh@gmail.com>",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^22.13.1",
+    "typescript": "^5.7.3"
+  }
 }

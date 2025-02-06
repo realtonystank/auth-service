@@ -1,5 +1,10 @@
-function welcome(name: string) {
-  return name;
+function welcome(lname: string) {
+  const user = {
+    name: "Priyansh",
+  };
+  const fname = user.name;
+
+  return fname + lname;
 }
 
-welcome("Priyansh");
+welcome("Singh Rajwar");

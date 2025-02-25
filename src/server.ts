@@ -1,10 +1,4 @@
-function welcome(lname: string) {
-  const user = {
-    name: "Priyansh",
-  };
-  const fname = user.name;
+import { Config } from "./config";
 
-  return fname + lname;
-}
-
-welcome("Singh Rajwar");
+const port = Config.PORT;
+console.log(port);

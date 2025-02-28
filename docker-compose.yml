@@ -1,5 +1,18 @@
 version: "3"
 services:
+  authdb:
+    image: postgres
+    container_name: authPG
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - mynetwork
+
   app:
     image: auth-service:dev
     build:
@@ -14,5 +27,17 @@ services:
       - NODE_ENV=development
     env_file:
       - .env
+    depends_on:
+      - authdb
     stdin_open: true
     tty: true
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge
+
+volumes:
+  pgdata:
+    external: true

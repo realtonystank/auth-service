@@ -1,0 +1,7 @@
+{
+  "watch": ["src/", "lib/", "config/"],
+  "ext": "js,ts,json",
+  "ignore": ["node_modules/", "dist/", "build/"],
+  "verbose": true,
+  "legacyWatch": true
+}

@@ -1,0 +1,18 @@
+version: "3"
+services:
+  app:
+    image: auth-service:dev
+    build:
+      context: .
+      dockerfile: docker/dev/Dockerfile
+    volumes:
+      - "E:/development/cg/full_stack/auth-service:/usr/src/app"
+      - /usr/src/app/node_modules
+    ports:
+      - "5501:5501"
+    environment:
+      - NODE_ENV=development
+    env_file:
+      - .env
+    stdin_open: true
+    tty: true

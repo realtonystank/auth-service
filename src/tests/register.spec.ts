@@ -119,5 +119,17 @@ describe("POST /auth/register", () => {
       expect(users).toHaveLength(1);
     });
   });
-  describe("Some fields are missing", () => {});
+  describe("Some fields are missing", () => {
+    it("should return 400 status code if email field is missing", async () => {
+      const userData = {
+        firstName: "Priyansh",
+        lastName: "Singh Rajwar",
+        email: "",
+        password: "secret",
+      };
+      const response = await request(app).post("/auth/register").send(userData);
+
+      expect(response.statusCode).toBe(400);
+    });
+  });
 });

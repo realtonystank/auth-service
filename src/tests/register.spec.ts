@@ -2,15 +2,16 @@ import request from "supertest";
 import app from "../app";
 import { DataSource } from "typeorm";
 import { AppDataSource } from "../config/data-source";
-import { truncateTables } from "../utils";
 import { User } from "../entity/User";
+import { Roles } from "../constants";
 describe("POST /auth/register", () => {
   let connection: DataSource;
   beforeAll(async () => {
     connection = await AppDataSource.initialize();
   });
   beforeEach(async () => {
-    await truncateTables(connection);
+    await connection.dropDatabase();
+    await connection.synchronize();
   });
   afterAll(async () => {
     await connection.destroy();
@@ -68,6 +69,22 @@ describe("POST /auth/register", () => {
       const response = await request(app).post("/auth/register").send(userData);
 
       expect(response.body).toHaveProperty("id");
+    });
+    it("should assign a customer role", async () => {
+      const userData = {
+        firstName: "Priyansh",
+        lastName: "Singh Rajwar",
+        email: "rajwars.priyansh@gmail.com",
+        password: "secret",
+      };
+
+      await request(app).post("/auth/register").send(userData);
+
+      const userRepository = connection.getRepository(User);
+      const users = await userRepository.find();
+      expect(users).toHaveLength(1);
+      expect(users[0]).toHaveProperty("role");
+      expect(users[0].role).toBe(Roles.CUSTOMER);
     });
   });
   describe("Some fields are missing", () => {});

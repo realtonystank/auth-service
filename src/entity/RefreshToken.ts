@@ -17,7 +17,7 @@ export class RefreshToken {
   expiresAt: Date;
 
   @ManyToOne(() => User)
-  userId: User;
+  user: User;
 
   @UpdateDateColumn()
   updatedAt: number;

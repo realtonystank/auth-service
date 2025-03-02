@@ -9,6 +9,8 @@ import { readFileSync } from "fs";
 import path from "path";
 import createHttpError from "http-errors";
 import { Config } from "../config";
+import { AppDataSource } from "../config/data-source";
+import { RefreshToken } from "../entity/RefreshToken";
 
 export class AuthController {
   private privateKey: Buffer | null = null;
@@ -61,17 +63,27 @@ export class AuthController {
         expiresIn: "1h",
         issuer: "auth-service",
       });
-      const refreshToken = sign(payload, Config.REFRESH_TOKEN_SECRET!, {
-        algorithm: "HS256",
-        expiresIn: "7d",
-        issuer: "auth-service",
-      });
 
       res.cookie("accessToken", accessToken, {
         domain: "localhost",
         sameSite: "strict",
         maxAge: 1000 * 60 * 60,
         httpOnly: true,
+      });
+
+      const MS_IN_7DAY = 1000 * 60 * 60 * 24 * 7;
+
+      const refreshTokenRepository = AppDataSource.getRepository(RefreshToken);
+      const newRefreshToken = await refreshTokenRepository.save({
+        user: user,
+        expiresAt: new Date(Date.now() + MS_IN_7DAY),
+      });
+
+      const refreshToken = sign(payload, Config.REFRESH_TOKEN_SECRET!, {
+        algorithm: "HS256",
+        expiresIn: "7d",
+        issuer: "auth-service",
+        jwtid: String(newRefreshToken.id),
       });
 
       res.cookie("refreshToken", refreshToken, {

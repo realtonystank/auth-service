@@ -6,6 +6,7 @@ import { User } from "../entity/User";
 import { Roles } from "../constants";
 import { isJwt } from "../utils";
 import { RefreshToken } from "../entity/RefreshToken";
+import { Headers } from "../types";
 describe("POST /auth/register", () => {
   let connection: DataSource;
   beforeAll(async () => {
@@ -67,10 +68,6 @@ describe("POST /auth/register", () => {
       };
 
       const response = await request(app).post("/auth/login").send(userData);
-
-      interface Headers {
-        ["set-cookie"]: string[];
-      }
 
       let accessToken: string | null = null;
       let refreshToken: string | null = null;

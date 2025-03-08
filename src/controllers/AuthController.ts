@@ -169,7 +169,7 @@ export class AuthController {
 
       const newRefreshToken = await this.tokenService.persistRefreshToken(user);
 
-      await this.tokenService.deleteRefreshToken(req.auth.id!);
+      await this.tokenService.deleteRefreshToken(req.auth.id);
 
       const refreshToken = this.tokenService.generateRefreshToken({
         ...payload,
@@ -188,6 +188,19 @@ export class AuthController {
       });
 
       res.status(200).json({ id: user.id });
+    } catch (err) {
+      next(err);
+      return;
+    }
+  }
+  async logout(req: AuthRequest, res: Response, next: NextFunction) {
+    try {
+      await this.tokenService.deleteRefreshToken(req.auth.id);
+      this.logger.info("Refresh token has been deleted ", { id: req.auth.id });
+      res.clearCookie("accessToken");
+      res.clearCookie("refreshToken");
+      this.logger.info("Logging out user ", { id: req.auth.sub });
+      res.json();
     } catch (err) {
       next(err);
       return;

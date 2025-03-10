@@ -1,5 +1,5 @@
 import request from "supertest";
-import app from "../..//app";
+import app from "../../app";
 import { DataSource } from "typeorm";
 import { AppDataSource } from "../../config/data-source";
 import { Tenant } from "../../entity/Tenant";

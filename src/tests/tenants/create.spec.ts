@@ -98,5 +98,23 @@ describe("POST /tenants", () => {
       expect(tenantInDb).toHaveLength(0);
     });
   });
-  describe("Fields are not in proper format", () => {});
+  describe("Fields are missing", () => {
+    it("should return 400 status if tenant name is empty", async () => {
+      const tenantData = {
+        name: "",
+        address: "test address",
+      };
+
+      const response = await request(app)
+        .post("/tenants")
+        .set("Cookie", [`accessToken=${adminToken}`])
+        .send(tenantData);
+
+      expect(response.statusCode).toBe(400);
+
+      const tenantRepository = connection.getRepository(Tenant);
+      const tenantInDb = await tenantRepository.find();
+      expect(tenantInDb).toHaveLength(0);
+    });
+  });
 });

@@ -47,4 +47,14 @@ export class TenantController {
       return;
     }
   }
+  async deleteById(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
+    try {
+      await this.tenantService.deleteById(Number(id));
+      res.json();
+    } catch (err) {
+      next(err);
+      return;
+    }
+  }
 }

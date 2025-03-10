@@ -9,6 +9,7 @@ describe("POST /tenants", () => {
   let connection: DataSource;
   let jwks: ReturnType<typeof createJWKSMock>;
   let adminToken: string;
+  let managerToken: string;
   beforeAll(async () => {
     connection = await AppDataSource.initialize();
     jwks = createJWKSMock("http://localhost:5501");
@@ -20,6 +21,10 @@ describe("POST /tenants", () => {
     adminToken = jwks.token({
       sub: "1",
       role: Roles.ADMIN,
+    });
+    managerToken = jwks.token({
+      sub: "2",
+      role: Roles.MANAGER,
     });
   });
   afterEach(() => {
@@ -70,6 +75,23 @@ describe("POST /tenants", () => {
       const response = await request(app).post("/tenants").send(tenantData);
 
       expect(response.statusCode).toBe(401);
+
+      const tenantRepository = connection.getRepository(Tenant);
+      const tenantInDb = await tenantRepository.find();
+      expect(tenantInDb).toHaveLength(0);
+    });
+    it("should return 403 status if user is not admin", async () => {
+      const tenantData = {
+        name: "test tenant",
+        address: "tenant address",
+      };
+
+      const response = await request(app)
+        .post("/tenants")
+        .set("Cookie", [`accessToken=${managerToken}`])
+        .send(tenantData);
+
+      expect(response.statusCode).toBe(403);
 
       const tenantRepository = connection.getRepository(Tenant);
       const tenantInDb = await tenantRepository.find();

@@ -1,15 +1,15 @@
 import request from "supertest";
-import app from "../app";
+import app from "../../app";
 import { DataSource } from "typeorm";
-import { AppDataSource } from "../config/data-source";
-import { User } from "../entity/User";
-import { MS_IN_7DAY, Roles } from "../constants";
-import { RefreshToken } from "../entity/RefreshToken";
+import { AppDataSource } from "../../config/data-source";
+import { User } from "../../entity/User";
+import { MS_IN_7DAY, Roles } from "../../constants";
+import { RefreshToken } from "../../entity/RefreshToken";
 import jwt from "jsonwebtoken";
-import { Config } from "../config";
-import { Headers } from "../types";
+import { Config } from "../../config";
+import { Headers } from "../../types";
 import createJWKSMock from "mock-jwks";
-describe("POST /auth/register", () => {
+describe("POST /auth/refresh", () => {
   let connection: DataSource;
   let jwks: ReturnType<typeof createJWKSMock>;
   beforeAll(async () => {

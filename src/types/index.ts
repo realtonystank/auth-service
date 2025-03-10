@@ -30,3 +30,12 @@ export interface IRefreshTokenPayload {
 export interface Headers {
   ["set-cookie"]: string[];
 }
+
+export interface ITenant {
+  name: string;
+  address: string;
+}
+
+export interface TenantRequest extends Request {
+  body: ITenant;
+}

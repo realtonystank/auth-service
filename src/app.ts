@@ -3,6 +3,7 @@ import express, { NextFunction, Request, Response } from "express";
 import cookieParser from "cookie-parser";
 import logger from "./config/logger";
 import authRouter from "./routes/auth";
+import tenantRouter from "./routes/tenant";
 import { HttpError } from "http-errors";
 
 const app = express();
@@ -14,6 +15,7 @@ app.get("/", (_req: Request, res: Response) => {
   res.send("Welcome to auth service.");
 });
 app.use("/auth", authRouter);
+app.use("/tenants", tenantRouter);
 
 //eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {

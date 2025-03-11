@@ -21,4 +21,19 @@ export class TenantService {
   async deleteById(id: number) {
     return await this.tenantRepository.delete({ id });
   }
+
+  async updateById(
+    id: number,
+    { name, address }: { name: string; address: string },
+  ) {
+    const patchData: Partial<ITenant> = {};
+    if (name !== "") patchData.name = name;
+    if (address !== "") patchData.address = address;
+    return await this.tenantRepository.update(
+      {
+        id,
+      },
+      patchData,
+    );
+  }
 }

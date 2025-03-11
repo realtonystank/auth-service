@@ -57,4 +57,21 @@ export class TenantController {
       return;
     }
   }
+  async updateById(req: TenantRequest, res: Response, next: NextFunction) {
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+      return res.status(400).json({ errors: result.array() });
+    }
+
+    const { id } = req.params;
+    const { name, address } = req.body;
+
+    try {
+      await this.tenantService.updateById(Number(id), { name, address });
+      res.json();
+    } catch (err) {
+      next(err);
+      return;
+    }
+  }
 }

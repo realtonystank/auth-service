@@ -15,6 +15,8 @@ export default [
       "eslint.config.mjs",
       "jest.config.js",
       ".dockerignore",
+      "*.spec.ts",
+      "test/",
     ],
   },
   {

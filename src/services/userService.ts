@@ -53,4 +53,8 @@ export class UserService {
   async fetchAll() {
     return await this.userRepository.find();
   }
+
+  async deleteById(id: number) {
+    return await this.userRepository.delete({ id });
+  }
 }

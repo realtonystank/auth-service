@@ -69,4 +69,22 @@ export class UserController {
       return;
     }
   }
+
+  async deleteById(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
+    if (isNaN(Number(id))) {
+      const error = createHttpError(400, "Invalid url param.");
+      next(error);
+      return;
+    }
+    this.logger.debug("Request to delete user", { id });
+    try {
+      await this.userService.deleteById(Number(id));
+      this.logger.info("User successfully deleted", { id });
+      res.json();
+    } catch (err) {
+      next(err);
+      return;
+    }
+  }
 }

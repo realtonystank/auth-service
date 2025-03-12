@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { NextFunction } from "express-serve-static-core";
 import { UserService } from "../services/userService";
-import { CreateUserRequest } from "../types";
+import { CreateUserRequest, UpdateUserRequest } from "../types";
 import { validationResult } from "express-validator";
 import { Logger } from "winston";
 import createHttpError from "http-errors";
@@ -70,7 +70,7 @@ export class UserController {
     }
   }
 
-  async deleteById(req: Request, res: Response, next: NextFunction) {
+  async deleteById(req: UpdateUserRequest, res: Response, next: NextFunction) {
     const { id } = req.params;
     if (isNaN(Number(id))) {
       const error = createHttpError(400, "Invalid url param.");
@@ -82,6 +82,37 @@ export class UserController {
       await this.userService.deleteById(Number(id));
       this.logger.info("User successfully deleted", { id });
       res.json();
+    } catch (err) {
+      next(err);
+      return;
+    }
+  }
+
+  async updateById(req: Request, res: Response, next: NextFunction) {
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+      return res.status(400).json({ errors: result.array() });
+    }
+
+    const { id } = req.params;
+    if (isNaN(Number(id))) {
+      const error = createHttpError(400, "Invalid url param.");
+      next(error);
+      return;
+    }
+
+    const { firstName, lastName, email, role, tenantId } = req.body;
+
+    this.logger.debug("Request to update user", { id });
+    try {
+      const user = await this.userService.updateById(Number(id), {
+        firstName,
+        lastName,
+        email,
+        role,
+        tenantId,
+      });
+      res.json(user);
     } catch (err) {
       next(err);
       return;

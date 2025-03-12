@@ -8,6 +8,8 @@ export interface UserData {
   tenantId?: number;
 }
 
+export type UpdateUserData = Omit<UserData, "password">;
+
 export interface RegisterUserRequest extends Request {
   body: UserData;
 }
@@ -43,5 +45,9 @@ export interface TenantRequest extends Request {
 }
 
 export interface CreateUserRequest extends Request {
+  body: UserData;
+}
+
+export interface UpdateUserRequest extends Request {
   body: UserData;
 }

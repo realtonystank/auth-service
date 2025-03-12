@@ -1,4 +1,4 @@
-import { UserData } from "../types";
+import { UpdateUserData, UserData } from "../types";
 import { User } from "../entity/User";
 import { Repository } from "typeorm";
 import createHttpError from "http-errors";
@@ -53,8 +53,22 @@ export class UserService {
   async fetchAll() {
     return await this.userRepository.find();
   }
-
   async deleteById(id: number) {
     return await this.userRepository.delete({ id });
+  }
+  async updateById(
+    id: number,
+    { firstName, lastName, email, role, tenantId }: UpdateUserData,
+  ) {
+    return await this.userRepository.update(
+      { id },
+      {
+        firstName,
+        lastName,
+        email,
+        role,
+        tenant: tenantId ? { id: tenantId } : undefined,
+      },
+    );
   }
 }

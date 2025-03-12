@@ -7,8 +7,9 @@ import { UserController } from "../controllers/UserController";
 import { UserService } from "../services/userService";
 import { AppDataSource } from "../config/data-source";
 import { User } from "../entity/User";
-import { CreateUserRequest } from "../types";
+import { CreateUserRequest, UpdateUserRequest } from "../types";
 import createUserValidator from "../validators/create-user-validator";
+import updateUserValidator from "../validators/update-user-validator";
 import logger from "../config/logger";
 
 const router = express.Router();
@@ -47,6 +48,15 @@ router.delete(
   canAccess([Roles.ADMIN]),
   (req: Request, res: Response, next: NextFunction) =>
     void userController.deleteById(req, res, next),
+);
+
+router.patch(
+  "/:id",
+  authenticate,
+  canAccess([Roles.ADMIN]),
+  updateUserValidator,
+  (req: Request, res: Response, next: NextFunction) =>
+    void userController.updateById(req as UpdateUserRequest, res, next),
 );
 
 export default router;

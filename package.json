@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=dev nodemon ./src/server.ts",
+    "build": "tsc",
     "test": "jest --watch --runInBand",
     "format:fix": "prettier . --write",
     "format:check": "prettier . --check",

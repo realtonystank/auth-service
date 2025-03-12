@@ -15,7 +15,6 @@ export class UserService {
 
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
-    console.log("Role is -> ", role);
     try {
       const userInfo = await this.userRepository.save({
         firstName,
@@ -34,12 +33,16 @@ export class UserService {
       throw error;
     }
   }
-  async findByEmail(email: string) {
+  async findByEmailWithPassword(email: string) {
     return await this.userRepository.findOne({
       where: { email: email },
+      select: ["id", "firstName", "lastName", "email", "role", "password"],
     });
   }
   async findById(id: number) {
     return this.userRepository.findOne({ where: { id } });
+  }
+  async fetchAll() {
+    return await this.userRepository.find();
   }
 }

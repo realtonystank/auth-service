@@ -202,5 +202,30 @@ describe("POST /users", () => {
       expect(userInDB[0].lastName).toBe("user");
       expect(userInDB[0].password).toBe("secret12345");
     });
+    it("should return 400 status if role is not proper", async () => {
+      const userPatch = {
+        firstName: "Priyansh",
+        lastName: "Singh Rajwar",
+        password: "password12345",
+        email: "admin@gmail.com",
+        role: "Random",
+        tenantId: "1",
+      };
+
+      const response = await request(app)
+        .patch("/users/1")
+        .set("Cookie", [`accessToken=${adminToken}`])
+        .send(userPatch);
+
+      const userRepository = connection.getRepository(User);
+      const userInDB = await userRepository.find({
+        select: ["firstName", "lastName", "password"],
+      });
+      expect(response.statusCode).toBe(400);
+      expect(userInDB).toHaveLength(1);
+      expect(userInDB[0].firstName).toBe("test");
+      expect(userInDB[0].lastName).toBe("user");
+      expect(userInDB[0].password).toBe("secret12345");
+    });
   });
 });

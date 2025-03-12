@@ -5,6 +5,8 @@ import { AppDataSource } from "../../config/data-source";
 import { User } from "../../entity/User";
 import { Roles } from "../../constants";
 import createJWKSMock from "mock-jwks";
+import { createTenant } from "../../utils";
+import { Tenant } from "../../entity/Tenant";
 describe("POST /users", () => {
   let connection: DataSource;
   let jwks: ReturnType<typeof createJWKSMock>;
@@ -26,6 +28,7 @@ describe("POST /users", () => {
 
   describe("Given all fields", () => {
     it("should persist the user in db", async () => {
+      const tenant = await createTenant(connection.getRepository(Tenant));
       const adminToken = jwks.token({
         sub: "1",
         role: Roles.ADMIN,
@@ -36,7 +39,8 @@ describe("POST /users", () => {
         lastName: "Singh Rajwar",
         email: "admin@gmail.com",
         password: "secret12345",
-        tenantId: 1,
+        tenantId: tenant.id,
+        role: Roles.MANAGER,
       };
 
       await request(app)
@@ -51,6 +55,7 @@ describe("POST /users", () => {
       expect(userInDB[0].email).toBe(userData.email);
     });
     it("should create a manager user", async () => {
+      const tenant = await createTenant(connection.getRepository(Tenant));
       const adminToken = jwks.token({
         sub: "1",
         role: Roles.ADMIN,
@@ -61,7 +66,8 @@ describe("POST /users", () => {
         lastName: "Singh Rajwar",
         email: "admin@gmail.com",
         password: "secret12345",
-        tenantId: 1,
+        tenantId: tenant.id,
+        role: Roles.MANAGER,
       };
 
       await request(app)
@@ -76,6 +82,7 @@ describe("POST /users", () => {
       expect(userInDB[0].email).toBe(userData.email);
     });
     it("should return 403 if non admin user tries to create a user", async () => {
+      const tenant = await createTenant(connection.getRepository(Tenant));
       const customerToken = jwks.token({
         sub: "1",
         role: Roles.CUSTOMER,
@@ -86,7 +93,8 @@ describe("POST /users", () => {
         lastName: "Singh Rajwar",
         email: "admin@gmail.com",
         password: "secret12345",
-        tenantId: 1,
+        tenantId: tenant.id,
+        role: Roles.MANAGER,
       };
 
       const response = await request(app)

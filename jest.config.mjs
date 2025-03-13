@@ -2,7 +2,7 @@
 export default {
   testEnvironment: "node",
   transform: {
-    "^.+\.tsx?$": ["ts-jest", {}],
+    "^.+.tsx?$": ["ts-jest", {}],
   },
   verbose: true,
   collectCoverage: true,

@@ -7,7 +7,9 @@ import { MS_IN_7DAY } from "../constants";
 import { User } from "../entity/User";
 
 export class TokenService {
-  constructor(private refreshTokenRepository: Repository<RefreshToken>) {}
+  constructor(
+    private readonly refreshTokenRepository: Repository<RefreshToken>,
+  ) {}
   generateAccessToken(payload: JwtPayload) {
     if (!Config.PRIVATE_KEY) {
       const error = createHttpError(500, "SECRET_KEY is not set");

@@ -12,10 +12,10 @@ import { Roles } from "../constants";
 
 export class AuthController {
   constructor(
-    private userService: UserService,
-    private logger: Logger,
-    private tokenService: TokenService,
-    private credentialService: CredentialService,
+    private readonly userService: UserService,
+    private readonly logger: Logger,
+    private readonly tokenService: TokenService,
+    private readonly credentialService: CredentialService,
   ) {}
   async register(req: RegisterUserRequest, res: Response, next: NextFunction) {
     const result = validationResult(req);
@@ -92,7 +92,7 @@ export class AuthController {
         return;
       }
 
-      const passwordMatch = this.credentialService.comparePassword(
+      const passwordMatch = await this.credentialService.comparePassword(
         password,
         user.password,
       );

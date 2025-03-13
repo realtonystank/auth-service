@@ -7,6 +7,7 @@ import { Roles } from "../../constants";
 import { isJwt } from "../../utils";
 import { RefreshToken } from "../../entity/RefreshToken";
 import { Headers } from "../../types";
+import { hash } from "bcrypt";
 describe("POST /auth/login", () => {
   let connection: DataSource;
   beforeAll(async () => {
@@ -16,11 +17,12 @@ describe("POST /auth/login", () => {
     await connection.dropDatabase();
     await connection.synchronize();
     const userRepository = connection.getRepository(User);
+    const hashedPassword = await hash("secret12345", 10);
     await userRepository.save({
       firstName: "Priyansh",
       lastName: "Singh Rajwar",
       email: "admin@gmail.com",
-      password: "secret12345",
+      password: hashedPassword,
       role: Roles.CUSTOMER,
     });
   });
@@ -105,6 +107,14 @@ describe("POST /auth/login", () => {
         .getMany();
 
       expect(tokens).toHaveLength(1);
+    });
+    it("should return 400 status if wrong password is used", async () => {
+      const userData = {
+        email: "admin@gmail.com",
+        password: "secret123456",
+      };
+      const response = await request(app).post("/auth/login").send(userData);
+      expect(response.statusCode).toBe(400);
     });
   });
   describe("Some fields are missing", () => {

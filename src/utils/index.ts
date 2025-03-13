@@ -1,13 +1,5 @@
-import { DataSource, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { Tenant } from "../entity/Tenant";
-
-export const truncateTables = async (connection: DataSource) => {
-  const entities = connection.entityMetadatas;
-  for (const entity of entities) {
-    const respository = connection.getRepository(entity.name);
-    await respository.clear();
-  }
-};
 
 export const isJwt = (token: string | null): boolean => {
   if (token === null) return false;

@@ -5,4 +5,7 @@ export default {
     "^.+\.tsx?$": ["ts-jest", {}],
   },
   verbose: true,
+  collectCoverage: true,
+  coverageProvider: "v8",
+  collectCoverageFrom: ["src/**/*.ts", "!src/tests/**", "!**/node_modules/**"],
 };

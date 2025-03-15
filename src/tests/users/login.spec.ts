@@ -7,7 +7,7 @@ import { Roles } from "../../constants";
 import { isJwt } from "../../utils";
 import { RefreshToken } from "../../entity/RefreshToken";
 import { Headers } from "../../types";
-import { hash } from "bcrypt";
+import { hash } from "bcryptjs";
 describe("POST /auth/login", () => {
   let connection: DataSource;
   beforeAll(async () => {

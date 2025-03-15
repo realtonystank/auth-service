@@ -27,6 +27,7 @@
   "devDependencies": {
     "@eslint/js": "^9.19.0",
     "@types/bcrypt": "^5.0.2",
+    "@types/bcryptjs": "^2.4.6",
     "@types/cookie-parser": "^1.4.8",
     "@types/express": "^5.0.0",
     "@types/http-errors": "^2.0.4",
@@ -54,7 +55,7 @@
     ]
   },
   "dependencies": {
-    "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.2",
     "cookie-parser": "^1.4.7",
     "cross-env": "^7.0.3",
     "dotenv": "^16.4.7",

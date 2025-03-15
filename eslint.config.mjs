@@ -17,6 +17,7 @@ export default [
       ".dockerignore",
       "*.spec.ts",
       "test/",
+      ".github",
     ],
   },
   {

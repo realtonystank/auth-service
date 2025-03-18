@@ -48,7 +48,10 @@ export class UserService {
     });
   }
   async findById(id: number) {
-    return this.userRepository.findOne({ where: { id } });
+    return this.userRepository.findOne({
+      where: { id },
+      relations: { tenant: true },
+    });
   }
   async fetchAll() {
     return await this.userRepository.find();

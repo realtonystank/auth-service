@@ -79,9 +79,12 @@ describe("GET /users", () => {
         (response.headers as Record<string, string>)["content-type"],
       ).toEqual(expect.stringContaining("json"));
 
-      expect(response.body).toHaveLength(1);
-      expect(response.body[0]).toHaveProperty("role");
-      expect(response.body[0].role).toBe(Roles.MANAGER);
+      expect(response.body).toHaveProperty("currentPage");
+      expect(response.body.currentPage).toBe(1);
+      expect(response.body).toHaveProperty("data");
+      expect(response.body.data).toHaveLength(1);
+      expect(response.body.data[0]).toHaveProperty("role");
+      expect(response.body.data[0].role).toBe(Roles.MANAGER);
     });
     it("should not return password in response json", async () => {
       const adminToken = jwks.token({
@@ -95,8 +98,9 @@ describe("GET /users", () => {
         .send();
 
       expect(response.body).not.toBeNull();
-      expect(response.body).not.toHaveLength(0);
-      expect(response.body[0]).not.toHaveProperty("password");
+      expect(response.body).toHaveProperty("data");
+      expect(response.body.data).not.toHaveLength(0);
+      expect(response.body.data[0]).not.toHaveProperty("password");
     });
   });
 });

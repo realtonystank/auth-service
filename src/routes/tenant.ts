@@ -8,6 +8,7 @@ import logger from "../config/logger";
 import authenticate from "../middlewares/authenticate";
 import { Roles } from "../constants";
 import createTenantValidator from "../validators/create-tenant-validator";
+import listTenantsValidator from "../validators/list-tenants-validator";
 
 const tenantRepository = AppDataSource.getRepository(Tenant);
 const tenantServie = new TenantService(tenantRepository);
@@ -26,6 +27,7 @@ router.post(
 
 router.get(
   "/",
+  listTenantsValidator,
   (req: Request, res: Response, next: NextFunction) =>
     void tenantController.getAll(req, res, next),
 );

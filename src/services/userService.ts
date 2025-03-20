@@ -1,4 +1,4 @@
-import { UpdateUserData, UserData } from "../types";
+import { UpdateUserData, UserData, UserQueryParams } from "../types";
 import { User } from "../entity/User";
 import { Repository } from "typeorm";
 import createHttpError from "http-errors";
@@ -53,8 +53,13 @@ export class UserService {
       relations: { tenant: true },
     });
   }
-  async fetchAll() {
-    return await this.userRepository.find();
+  async fetchAll({ currentPage, perPage }: UserQueryParams) {
+    const queryBuilder = this.userRepository.createQueryBuilder();
+    const result = await queryBuilder
+      .skip((currentPage - 1) * perPage)
+      .take(perPage)
+      .getManyAndCount();
+    return result;
   }
   async deleteById(id: number) {
     return await this.userRepository.delete({ id });

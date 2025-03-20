@@ -1,6 +1,6 @@
 import { Repository } from "typeorm";
 import { Tenant } from "../entity/Tenant";
-import { ITenant } from "../types";
+import { IQueryParams, ITenant } from "../types";
 
 export class TenantService {
   constructor(private readonly tenantRepository: Repository<Tenant>) {}
@@ -9,8 +9,13 @@ export class TenantService {
     return await this.tenantRepository.save(tenantData);
   }
 
-  async getAll() {
-    return await this.tenantRepository.find();
+  async getAll({ currentPage, perPage }: IQueryParams) {
+    const queryBuilder = this.tenantRepository.createQueryBuilder();
+    const tenants = await queryBuilder
+      .skip((currentPage - 1) * perPage)
+      .take(perPage)
+      .getManyAndCount();
+    return tenants;
   }
   async getById(id: number) {
     return await this.tenantRepository.findOne({

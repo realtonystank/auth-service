@@ -1,11 +1,7 @@
 import { Request, Response } from "express";
 import { NextFunction } from "express-serve-static-core";
 import { UserService } from "../services/userService";
-import {
-  CreateUserRequest,
-  UpdateUserRequest,
-  UserQueryParams,
-} from "../types";
+import { CreateUserRequest, IQueryParams, UpdateUserRequest } from "../types";
 import { matchedData, validationResult } from "express-validator";
 import { Logger } from "winston";
 import createHttpError from "http-errors";
@@ -52,14 +48,14 @@ export class UserController {
 
     try {
       const [users, count] = await this.userService.fetchAll(
-        validatedQuery as UserQueryParams,
+        validatedQuery as IQueryParams,
       );
       this.logger.info("Users fetch success");
       res.json({
         currentPage: validatedQuery.currentPage,
         perPage: validatedQuery.perPage,
-        total: count,
         data: users,
+        total: count,
       });
     } catch (err) {
       next(err);

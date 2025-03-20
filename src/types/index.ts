@@ -52,7 +52,7 @@ export interface UpdateUserRequest extends Request {
   body: UserData;
 }
 
-export interface UserQueryParams {
+export interface IQueryParams {
   perPage: number;
   currentPage: number;
 }

@@ -38,9 +38,12 @@ describe("GET /tenants", () => {
     });
     it("should return correct json response", async () => {
       const response = await request(app).get("/tenants").send();
-      expect(response.body).toHaveLength(2);
-      expect(response.body[0].name).toBe("test name 1");
-      expect(response.body[0].address).toBe("test address 1");
+      expect(response.body).toHaveProperty("currentPage");
+      expect(response.body.currentPage).toBe(1);
+      expect(response.body).toHaveProperty("data");
+      expect(response.body.data).toHaveLength(2);
+      expect(response.body.data[0]).toHaveProperty("address");
+      expect(response.body.data[0].address).toBe("test address 1");
     });
   });
 });

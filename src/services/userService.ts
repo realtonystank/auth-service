@@ -1,4 +1,4 @@
-import { UpdateUserData, UserData, UserQueryParams } from "../types";
+import { UpdateUserData, UserData, IQueryParams } from "../types";
 import { User } from "../entity/User";
 import { Repository } from "typeorm";
 import createHttpError from "http-errors";
@@ -53,7 +53,7 @@ export class UserService {
       relations: { tenant: true },
     });
   }
-  async fetchAll({ currentPage, perPage }: UserQueryParams) {
+  async fetchAll({ currentPage, perPage }: IQueryParams) {
     const queryBuilder = this.userRepository.createQueryBuilder();
     const result = await queryBuilder
       .skip((currentPage - 1) * perPage)

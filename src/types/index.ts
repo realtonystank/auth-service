@@ -55,4 +55,6 @@ export interface UpdateUserRequest extends Request {
 export interface IQueryParams {
   perPage: number;
   currentPage: number;
+  q: string;
+  role: string;
 }

@@ -102,5 +102,32 @@ describe("GET /users", () => {
       expect(response.body.data).not.toHaveLength(0);
       expect(response.body.data[0]).not.toHaveProperty("password");
     });
+    it("should handle url query params", async () => {
+      const adminToken = jwks.token({
+        sub: "1",
+        role: Roles.ADMIN,
+      });
+      const response = await request(app)
+        .get("/users?q=Priyansh&role=manager")
+        .set("Cookie", [`accessToken=${adminToken}`])
+        .send();
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toHaveProperty("data");
+      expect(response.body.data).toHaveLength(1);
+      expect(response.body.data[0].email).toBe("admin@gmail.com");
+    });
+    it("should not match any record because of query params", async () => {
+      const adminToken = jwks.token({
+        sub: "1",
+        role: Roles.ADMIN,
+      });
+      const response = await request(app)
+        .get("/users?q=Priyansh&role=admin")
+        .set("Cookie", [`accessToken=${adminToken}`])
+        .send();
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toHaveProperty("data");
+      expect(response.body.data).toHaveLength(0);
+    });
   });
 });
